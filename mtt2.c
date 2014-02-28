@@ -58,7 +58,7 @@ STRING kHelpOnYourTurn =
         "You place one of your pieces on one of the empty board positions.";
 
 STRING kHelpStandardObjective =
-        "To get three of your markers (either X or O) in a row, either\n\
+        "To get three of your markers (either X/+ or O/*) in a row, either\n\
 horizontally, vertically, or diagonally. 3-in-a-row WINS."                                                                          ;
 
 STRING kHelpReverseObjective =
@@ -125,17 +125,18 @@ Computer wins. Nice try, Niko."                                                 
 **
 **************************************************************************/
 
-#define BOARDSIZE     27           /* 3x9 board */
+#define BOARDSIZE     18           /* 3x6 board */
 
 typedef enum possibleBoardPieces {
 	Blank, o, x
 } BlankOX;
 
-char *gBlankOXString[] = { " ", "o", "x" };
+char *gBlankOXString[] = { " ", "o", "x", "*", "+" };
 
 /*HERE*/
 /* Powers of 3 - this is the way I encode the position, as an integer */
-int g3Array[] = { 1, 3, 9, 27, 81, 243, 729, 2187, 6561 };
+/*Too Big!!!!, Gona need to rethink the encoding algorythm*/
+int g3Array[] = { 1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683, 59049, 177147, 531441, 1594323, 4782969, 14348907, 43046721, 129140163};
 
 /* Global position solver variables.*/
 struct {
@@ -160,7 +161,7 @@ POSITION ActualNumberOfPositions(int variant);
 /**************** SYMMETRY FUN BEGIN **************/
 /**************************************************/
 
-BOOLEAN kSupportsSymmetries = TRUE; /* Whether we support symmetries */
+BOOLEAN kSupportsSymmetries = FALSE; /* Whether we support symmetries, temporarally false untill everything else is done (check me colby)*/
 
 #define NUMSYMMETRIES 8   /*  4 rotations, 4 flipped rotations */
 
@@ -171,7 +172,7 @@ int gSymmetryMatrix[NUMSYMMETRIES][BOARDSIZE];
 ** FLIP						ROTATE
 **
 ** 0 1 2	2 1 0		0 1 2		6 3 0		8 7 6		2 5 8
-** 3 4 5  ->    5 4 3		3 4 5	->	7 4 1  ->	5 4 3	->	1 4 7
+** 3 4 5 -> 5 4 3		3 4 5  ->	7 4 1  ->	5 4 3	->	1 4 7
 ** 6 7 8	8 7 6		6 7 8		8 5 2		2 1 0		0 3 6
 */
 
